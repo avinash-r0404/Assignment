@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Detections</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 40px; }
+    img { max-width: min(90vw, 900px); height: auto; display:block; margin-bottom: 16px; border-radius: 8px; }
+    table { border-collapse: collapse; }
+    td, th { border: 1px solid #ccc; padding: 6px 10px; }
+    .links a{ margin-right: 12px; }
+  </style>
+</head>
+<body>
+  <div class="links">
+    <a href="/">← Back</a>
+    <a href="{{ img_url }}" download>Download Image</a>
+    <a href="{{ json_url }}" download>Download JSON</a>
+  </div>
+  <h2>Annotated Result</h2>
+  <img src="{{ img_url }}" alt="Annotated image" />
+  <h3>Detections ({{ detections|length }})</h3>
+  <table>
+    <thead><tr><th>Class</th><th>Confidence</th><th>Box (x1,y1,x2,y2)</th></tr></thead>
+    <tbody>
+      {% for d in detections %}
+      <tr>
+        <td>{{ d.class_name }}</td>
+        <td>{{ ('%.2f' % d.confidence) }}</td>
+        <td>{{ d.box.x1 }}, {{ d.box.y1 }}, {{ d.box.x2 }}, {{ d.box.y2 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

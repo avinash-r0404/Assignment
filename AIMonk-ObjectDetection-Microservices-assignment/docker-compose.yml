@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  ai-backend:
+    build: ./ai-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./ai-backend:/app   
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ui-backend:
+    build: ./ui-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - AI_URL=http://ai-backend:8000/detect
+    depends_on:
+      ai-backend:
+        condition: service_healthy
+    volumes:
+      - ./ui-backend/outputs:/app/outputs
